@@ -20,7 +20,7 @@ public class UnitController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (frame++ % 60 == 0) {
-			unit.behave();
+			unit.Update();
 			positionUnit();
 			positionNeighbors();
 		}

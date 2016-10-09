@@ -23,6 +23,9 @@ public class Behavior {
     private static List<Func<Unit, bool>> truePredicates = new List<Func<Unit, bool>> {
         (Unit u) => true
     };
+    private static List<Func<Unit, bool>> neighboringUnitPredicates = new List<Func<Unit, bool>> {
+        (Unit u) => u.neighboringUnits.Length > 0
+    };
     private static List<Func<Unit, bool>> upActions = new List<Func<Unit, bool>> {
         (Unit u) => {
         	u.move(Unit.north);
@@ -32,6 +35,12 @@ public class Behavior {
     private static List<Func<Unit, bool>> downActions = new List<Func<Unit, bool>> {
         (Unit u) => {
             u.move(Unit.south);
+            return true;
+        }
+    };
+    private static List<Func<Unit, bool>> engageNeighboringUnitActions = new List<Func<Unit, bool>> {
+        (Unit u) => {
+            u.engageNeighboringUnit();
             return true;
         }
     };
