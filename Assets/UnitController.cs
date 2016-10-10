@@ -21,7 +21,7 @@ public class UnitController : MonoBehaviour {
 		if (frame++ % 60 == 0) {
 			unit.Update();
 			positionUnit();
-			positionNeighbors();
+			// positionNeighbors();
 		}
 	}
 

@@ -9,8 +9,8 @@ public class Unit {
     public Behavior[] behaviors;
     public int health;
     public int damage;
-    public Status status;
-    public List<Unit> neighboringUnits;
+    public Status status = Status.alive;
+    public List<Unit> neighboringUnits = new List<Unit>();
 
     public Unit (Hex position, Grid grid, Behavior[] behaviors, int health = 100, int damage = 20) {
         this.grid = grid;
@@ -20,33 +20,31 @@ public class Unit {
         this.damage = damage;
     }
 
+    public String toString () {
+        return this.status + ": " + this.health;
+    }
+
     public Hex Position {
         get {
             return position;
         }
         set {
+            grid.moveUnit(this, position, value);
             position = value;
-            try {
-                grid.unitMap[position.getHash()] = this;
-            } catch (NullReferenceException) {}
-            
         }
     }
 
     public void Update () {
-        setState();
         if (status == Status.alive) {
             live();
+            setState();
         } else {
             die();
         }
     }
 
-    private void setState () {
-        // set neighboringUnits
-        
+    private void setState () {        
         neighboringUnits = grid.getUnits(getNeighboringCells());
-        Debug.Log(neighboringUnits); 
         status = health > 0 ? Status.alive : Status.dead;
     }
 
@@ -57,21 +55,34 @@ public class Unit {
     }
 
     public void die () {
-
+        this.Position = Hex.graveYard;
     }
 
     public void move (Hex direction) {
-        Position = Hex.add(Position, direction);
+        Hex potentialPosition = Hex.add(Position, direction);
+        if (canMoveTo(potentialPosition)) {
+            Position = Hex.add(Position, direction);
+        }
     }
 
     public void engageNeighboringUnit () {
-        // pick a neighboring unit and engage it
-        Console.WriteLine("engaging a unit");
+        Debug.Log("engaging a unit with my health at : " + health);
+        neighboringUnits[0].health -= damage;
     }
 
     public Hex[] getNeighboringCells () {
         return Hex.neighbors(this.Position);
     }
+
+    public bool canMoveTo (Hex h) {
+        try {
+            grid.getUnit(h);
+            return false;
+        } catch (KeyNotFoundException) {
+            return true;
+        }
+    }
+
 
 
     public static Hex northEast = Hex.directions[0];

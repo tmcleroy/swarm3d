@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 public class Grid {
 
@@ -21,6 +22,13 @@ public class Grid {
 
     public Unit getUnit(Hex h) {
         return unitMap[h.getHash()];
+    }
+
+    public void moveUnit(Unit u, Hex oldPos, Hex newPos) {
+        unitMap[newPos.getHash()] = u;
+        try {
+            unitMap.Remove(oldPos.getHash());
+        } catch (NullReferenceException) { };
     }
 
     public List<Unit> getUnits(Hex[] hexes) {

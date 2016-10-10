@@ -12,6 +12,8 @@ public class Hex {
         this.s = s;
 	}
 
+    public static Hex graveYard = new Hex(0, 0, 0);
+
 	public override String ToString () {
 		return String.Format("({0}, {1}, {1})", this.q, this.r, this.s);
 	}
@@ -23,7 +25,6 @@ public class Hex {
 	static public Hex add(Hex a, Hex b) {
         return new Hex(a.q + b.q, a.r + b.r, a.s + b.s);
     }
-
 
     static public Hex subtract(Hex a, Hex b) {
         return new Hex(a.q - b.q, a.r - b.r, a.s - b.s);

@@ -26,6 +26,7 @@ public class Behavior {
     private static List<Func<Unit, bool>> neighboringUnitPredicates = new List<Func<Unit, bool>> {
         (Unit u) => u.neighboringUnits.Count > 0
     };
+    private static List<Func<Unit, bool>> stillActions = new List<Func<Unit, bool>> { (Unit u) => true };
     private static List<Func<Unit, bool>> upActions = new List<Func<Unit, bool>> {
         (Unit u) => {
         	u.move(Unit.north);
@@ -45,12 +46,14 @@ public class Behavior {
         }
     };
 
-
+    public static Behavior standStill = new Behavior(
+    	new Conditions(truePredicates),
+        new Actions(stillActions)
+    );
     public static Behavior moveUp = new Behavior(
     	new Conditions(truePredicates),
         new Actions(upActions)
     );
-
     public static Behavior moveDown = new Behavior(
         new Conditions(truePredicates),
         new Actions(downActions)
