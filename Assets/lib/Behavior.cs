@@ -24,7 +24,7 @@ public class Behavior {
         (Unit u) => true
     };
     private static List<Func<Unit, bool>> neighboringUnitPredicates = new List<Func<Unit, bool>> {
-        (Unit u) => u.neighboringUnits.Length > 0
+        (Unit u) => u.neighboringUnits.Count > 0
     };
     private static List<Func<Unit, bool>> upActions = new List<Func<Unit, bool>> {
         (Unit u) => {
@@ -47,13 +47,17 @@ public class Behavior {
 
 
     public static Behavior moveUp = new Behavior(
-    	new Conditions(truePredicates, Conditions.Evaluation.ALL),
+    	new Conditions(truePredicates),
         new Actions(upActions)
     );
 
     public static Behavior moveDown = new Behavior(
-        new Conditions(truePredicates, Conditions.Evaluation.ALL),
+        new Conditions(truePredicates),
         new Actions(downActions)
+    );
+    public static Behavior engageNeighbors = new Behavior(
+        new Conditions(neighboringUnitPredicates),
+        new Actions(engageNeighboringUnitActions)
     );
 }
 
@@ -64,7 +68,7 @@ public class Conditions {
     public List<Func<Unit, bool>> items;
     public Evaluation evalutation;
 
-    public Conditions (List<Func<Unit, bool>> items, Evaluation evaluation) {
+    public Conditions (List<Func<Unit, bool>> items, Evaluation evaluation = Evaluation.ALL) {
         this.items = items;
         this.evalutation = evaluation;
     }

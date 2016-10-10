@@ -1,30 +1,52 @@
-﻿public class Unit {
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Unit {
     public enum Status { alive, dead };
-	public Hex position;
+    private Hex position;
+    public Grid grid;
     public Behavior[] behaviors;
     public int health;
     public int damage;
     public Status status;
-    public Unit[] neighboringUnits;
+    public List<Unit> neighboringUnits;
 
-    public Unit (Hex position, Behavior[] behaviors, int health = 100, int damage = 20) {
-        this.position = position;
+    public Unit (Hex position, Grid grid, Behavior[] behaviors, int health = 100, int damage = 20) {
+        this.grid = grid;
+        this.Position = position;
         this.behaviors = behaviors;
         this.health = health;
         this.damage = damage;
     }
 
-    public void Update () {
-        this.setState();
-        if (status == Status.alive) {
-            this.live();
-        } else {
-            this.die();
+    public Hex Position {
+        get {
+            return position;
+        }
+        set {
+            position = value;
+            try {
+                grid.unitMap[position.getHash()] = this;
+            } catch (NullReferenceException) {}
+            
         }
     }
 
-    public void setState () {
+    public void Update () {
+        setState();
+        if (status == Status.alive) {
+            live();
+        } else {
+            die();
+        }
+    }
+
+    private void setState () {
         // set neighboringUnits
+        
+        neighboringUnits = grid.getUnits(getNeighboringCells());
+        Debug.Log(neighboringUnits); 
         status = health > 0 ? Status.alive : Status.dead;
     }
 
@@ -39,15 +61,16 @@
     }
 
     public void move (Hex direction) {
-        position = Hex.add(position, direction);
+        Position = Hex.add(Position, direction);
     }
 
     public void engageNeighboringUnit () {
         // pick a neighboring unit and engage it
+        Console.WriteLine("engaging a unit");
     }
 
-    public Hex[] getNeighbors () {
-        return Hex.neighbors(this.position);
+    public Hex[] getNeighboringCells () {
+        return Hex.neighbors(this.Position);
     }
 
 

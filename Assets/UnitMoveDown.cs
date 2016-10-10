@@ -2,8 +2,12 @@
 public class UnitMoveDown : UnitController {
 
 	// Use this for initialization
-	void Start () {
+	new void Start () {
 		base.Start();
-		unit = new Unit(new Hex(6, -4, -2), new Behavior[]{Behavior.moveDown});
+		Behavior[] behaviors = new Behavior[]{
+			Behavior.moveDown,
+			Behavior.engageNeighbors
+		};
+		unit = new Unit(new Hex(6, -4, -2), GridController.grid, behaviors);
 	}
 }

@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class UnitController : MonoBehaviour {
 
@@ -27,12 +26,12 @@ public class UnitController : MonoBehaviour {
 	}
 
 	void positionUnit () {
-		Vector2 origin = Layout.hexToPixel(GridController.layout, unit.position);
+		Vector2 origin = Layout.hexToPixel(GridController.layout, unit.Position);
 		unitObj.transform.position = new Vector3(origin.x, 5, origin.y);
 	}
 
 	void positionNeighbors () {
-		Hex[] neighborHexes = unit.getNeighbors();
+		Hex[] neighborHexes = unit.getNeighboringCells();
 		for (int i = 0; i < neighborObjs.Length; i++) {
 			Vector2 neighborOrigin = Layout.hexToPixel(GridController.layout, neighborHexes[i]);
 			neighborObjs[i].transform.position = new Vector3(neighborOrigin.x, 5, neighborOrigin.y);
