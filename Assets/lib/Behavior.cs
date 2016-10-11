@@ -5,11 +5,17 @@ public class Behavior {
 
 	private Conditions conditions;
     private Actions actions;
-    private static Random random = new Random();
+    private static Random random;
+    private static int moveCount;
+    private static Hex wanderDirection;
+    private static Hex[] directions = new Hex[6]{Unit.north, Unit.northEast, Unit.northWest, Unit.south, Unit.southEast, Unit.southWest};
 
     public Behavior (Conditions conditions, Actions actions) {
         this.conditions = conditions;
         this.actions = actions;
+        random = new Random();
+        moveCount = 0;
+        wanderDirection = directions[random.Next(0, directions.Length)];
     }
 
     public bool behave (Unit u) {
@@ -36,9 +42,8 @@ public class Behavior {
     };
     private static List<Func<Unit, bool>> wanderActions = new List<Func<Unit, bool>> {
         (Unit u) => {
-            Hex[] directions = new Hex[6]{Unit.north, Unit.northEast, Unit.northWest, Unit.south, Unit.southEast, Unit.southWest};
-            Hex direction = directions[random.Next(0, directions.Length)];
-        	u.move(direction);
+            wanderDirection = (moveCount++ % 4 == 0) ? directions[random.Next(0, directions.Length)] : wanderDirection;
+        	u.move(wanderDirection);
             return true;
         }
     };
