@@ -3,8 +3,8 @@
 public class GridController : MonoBehaviour {
 
 	public GameObject tileObj;
-	public static int gridWidth = 20;
-	public static int gridHeight = 10;	
+	public static int gridWidth = 60;
+	public static int gridHeight = 30;	
 	public static int cellSize = 10;
 	public static Grid grid = new Grid(gridWidth, gridHeight);
 	public static Layout layout;

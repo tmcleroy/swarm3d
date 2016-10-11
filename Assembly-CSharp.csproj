@@ -49,9 +49,9 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\GridController.cs" />
+     <Compile Include="Assets\Unit1.cs" />
+     <Compile Include="Assets\Unit2.cs" />
      <Compile Include="Assets\UnitController.cs" />
-     <Compile Include="Assets\UnitMoveDown.cs" />
-     <Compile Include="Assets\UnitMoveUp.cs" />
      <Compile Include="Assets\lib\Behavior.cs" />
      <Compile Include="Assets\lib\Grid.cs" />
      <Compile Include="Assets\lib\Hex.cs" />

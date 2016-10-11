@@ -5,6 +5,7 @@ public class Behavior {
 
 	private Conditions conditions;
     private Actions actions;
+    private static Random random = new Random();
 
     public Behavior (Conditions conditions, Actions actions) {
         this.conditions = conditions;
@@ -33,6 +34,14 @@ public class Behavior {
             return true;
         }
     };
+    private static List<Func<Unit, bool>> wanderActions = new List<Func<Unit, bool>> {
+        (Unit u) => {
+            Hex[] directions = new Hex[6]{Unit.north, Unit.northEast, Unit.northWest, Unit.south, Unit.southEast, Unit.southWest};
+            Hex direction = directions[random.Next(0, directions.Length)];
+        	u.move(direction);
+            return true;
+        }
+    };
     private static List<Func<Unit, bool>> downActions = new List<Func<Unit, bool>> {
         (Unit u) => {
             u.move(Unit.south);
@@ -57,6 +66,10 @@ public class Behavior {
     public static Behavior moveDown = new Behavior(
         new Conditions(truePredicates),
         new Actions(downActions)
+    );
+    public static Behavior randomWander = new Behavior(
+        new Conditions(truePredicates),
+        new Actions(wanderActions)
     );
     public static Behavior engageNeighbors = new Behavior(
         new Conditions(neighboringUnitPredicates),

@@ -75,7 +75,13 @@ public class Unit {
     }
 
     public bool canMoveTo (Hex h) {
-        try {
+        try { // cell exists?
+            grid.getCell(h);
+        } catch (KeyNotFoundException) {
+            return false;
+        }
+
+        try { // another unit occupies cell?
             grid.getUnit(h);
             return false;
         } catch (KeyNotFoundException) {
