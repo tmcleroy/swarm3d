@@ -5,17 +5,12 @@ public class Behavior {
 
 	private Conditions conditions;
     private Actions actions;
-    private static Random random;
-    private static int moveCount;
-    private static Hex wanderDirection;
     private static Hex[] directions = new Hex[6]{Unit.north, Unit.northEast, Unit.northWest, Unit.south, Unit.southEast, Unit.southWest};
+    private static Random random = new Random();
 
     public Behavior (Conditions conditions, Actions actions) {
         this.conditions = conditions;
         this.actions = actions;
-        random = new Random();
-        moveCount = 0;
-        wanderDirection = directions[random.Next(0, directions.Length)];
     }
 
     public bool behave (Unit u) {
@@ -27,8 +22,8 @@ public class Behavior {
     }
 
 
-    private static List<Func<Unit, bool>> truePredicates = new List<Func<Unit, bool>> {
-        (Unit u) => true
+    private static List<Func<Unit, bool>> isAlivePredicates = new List<Func<Unit, bool>> {
+        (Unit u) => u.isAlive()
     };
     private static List<Func<Unit, bool>> neighboringUnitPredicates = new List<Func<Unit, bool>> {
         (Unit u) => u.neighboringUnits.Count > 0
@@ -37,13 +32,6 @@ public class Behavior {
     private static List<Func<Unit, bool>> upActions = new List<Func<Unit, bool>> {
         (Unit u) => {
         	u.move(Unit.north);
-            return true;
-        }
-    };
-    private static List<Func<Unit, bool>> wanderActions = new List<Func<Unit, bool>> {
-        (Unit u) => {
-            wanderDirection = (moveCount++ % 4 == 0) ? directions[random.Next(0, directions.Length)] : wanderDirection;
-        	u.move(wanderDirection);
             return true;
         }
     };
@@ -61,25 +49,36 @@ public class Behavior {
     };
 
     public static Behavior standStill = new Behavior(
-    	new Conditions(truePredicates),
+    	new Conditions(isAlivePredicates),
         new Actions(stillActions)
     );
     public static Behavior moveUp = new Behavior(
-    	new Conditions(truePredicates),
+    	new Conditions(isAlivePredicates),
         new Actions(upActions)
     );
     public static Behavior moveDown = new Behavior(
-        new Conditions(truePredicates),
+        new Conditions(isAlivePredicates),
         new Actions(downActions)
-    );
-    public static Behavior randomWander = new Behavior(
-        new Conditions(truePredicates),
-        new Actions(wanderActions)
     );
     public static Behavior engageNeighbors = new Behavior(
         new Conditions(neighboringUnitPredicates),
         new Actions(engageNeighboringUnitActions)
     );
+    public static Func<Behavior> randomWander = () => {
+        int moveCount = 0;
+        Hex wanderDirection = directions[random.Next(0, directions.Length)];
+        List<Func<Unit, bool>> actions = new List<Func<Unit, bool>> {
+            (Unit u) => {
+                wanderDirection = (moveCount++ % 4 == 0) ? directions[random.Next(0, directions.Length)] : wanderDirection;
+                u.move(wanderDirection);
+                return true;
+            }
+        };
+        return new Behavior(
+            new Conditions(isAlivePredicates),
+            new Actions(actions)
+        );
+    };
 }
 
 

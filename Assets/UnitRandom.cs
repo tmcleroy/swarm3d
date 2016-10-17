@@ -1,5 +1,5 @@
-﻿
-public class Unit2 : UnitController {
+﻿using System;
+public class UnitRandom : UnitController {
 
 	// Use this for initialization
 	new void Start () {
@@ -8,6 +8,6 @@ public class Unit2 : UnitController {
 			Behavior.randomWander(),
 			Behavior.engageNeighbors
 		};
-		unit = new Unit(new Hex(6, -12, 6), GridController.grid, behaviors, 200);
+		unit = new Unit(GridController.grid.getRandomCell(), GridController.grid, behaviors);
 	}
 }

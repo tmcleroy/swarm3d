@@ -12,7 +12,7 @@ public class Unit {
     public Status status = Status.alive;
     public List<Unit> neighboringUnits = new List<Unit>();
 
-    public Unit (Hex position, Grid grid, Behavior[] behaviors, int health = 100, int damage = 20) {
+    public Unit (Hex position, Grid grid, Behavior[] behaviors, int health = 60, int damage = 20) {
         this.grid = grid;
         this.Position = position;
         this.behaviors = behaviors;
@@ -35,17 +35,18 @@ public class Unit {
     }
 
     public void Update () {
-        if (status == Status.alive) {
+        if (isAlive()) {
             live();
             setState();
-        } else {
-            die();
         }
     }
 
     private void setState () {        
         neighboringUnits = grid.getUnits(getNeighboringCells());
         status = health > 0 ? Status.alive : Status.dead;
+        if (status == Unit.Status.dead) {
+            die();
+        }
     }
 
     public void live () {
@@ -55,6 +56,7 @@ public class Unit {
     }
 
     public void die () {
+        Debug.Log("X_X");
         this.Position = Hex.graveYard;
     }
 
@@ -87,6 +89,10 @@ public class Unit {
         } catch (KeyNotFoundException) {
             return true;
         }
+    }
+
+    public bool isAlive () {
+        return status == Unit.Status.alive;
     }
 
 
