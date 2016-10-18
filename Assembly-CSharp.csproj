@@ -49,13 +49,13 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\GridController.cs" />
-     <Compile Include="Assets\Unit2.cs" />
      <Compile Include="Assets\UnitController.cs" />
      <Compile Include="Assets\UnitRandom.cs" />
      <Compile Include="Assets\lib\Behavior.cs" />
      <Compile Include="Assets\lib\Grid.cs" />
      <Compile Include="Assets\lib\Hex.cs" />
      <Compile Include="Assets\lib\Layout.cs" />
+     <Compile Include="Assets\lib\Simulation.cs" />
      <Compile Include="Assets\lib\Unit.cs" />
      <Compile Include="Assets\lib\Utils.cs" />
  <Reference Include="UnityEngine.UI">

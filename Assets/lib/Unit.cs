@@ -3,21 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Unit {
+    
+    public Simulation sim;
     public enum Status { alive, dead };
     private Hex position;
-    public Grid grid;
     public Behavior[] behaviors;
     public int health;
     public int damage;
     public Status status = Status.alive;
     public List<Unit> neighboringUnits = new List<Unit>();
 
-    public Unit (Hex position, Grid grid, Behavior[] behaviors, int health = 60, int damage = 20) {
-        this.grid = grid;
+    public Unit (Simulation sim, Hex position, Behavior[] behaviors, int health = 60, int damage = 20) {
+        this.sim = sim;
         this.Position = position;
         this.behaviors = behaviors;
         this.health = health;
         this.damage = damage;
+        this.sim.addUnit(this);
     }
 
     public String toString () {
@@ -29,12 +31,12 @@ public class Unit {
             return position;
         }
         set {
-            grid.moveUnit(this, position, value);
+            sim.grid.moveUnit(this, position, value);
             position = value;
         }
     }
 
-    public void Update () {
+    public void update () {
         if (isAlive()) {
             live();
             setState();
@@ -42,7 +44,7 @@ public class Unit {
     }
 
     private void setState () {        
-        neighboringUnits = grid.getUnits(getNeighboringCells());
+        neighboringUnits = sim.grid.getUnits(getNeighboringCells());
         status = health > 0 ? Status.alive : Status.dead;
         if (status == Unit.Status.dead) {
             die();
@@ -57,7 +59,8 @@ public class Unit {
 
     public void die () {
         Debug.Log("X_X");
-        this.Position = Hex.graveYard;
+        Position = Hex.graveYard;
+        sim.removeUnit(this);
     }
 
     public void move (Hex direction) {
@@ -78,13 +81,13 @@ public class Unit {
 
     public bool canMoveTo (Hex h) {
         try { // cell exists?
-            grid.getCell(h);
+            sim.grid.getCell(h);
         } catch (KeyNotFoundException) {
             return false;
         }
 
         try { // another unit occupies cell?
-            grid.getUnit(h);
+            sim.grid.getUnit(h);
             return false;
         } catch (KeyNotFoundException) {
             return true;

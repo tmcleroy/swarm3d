@@ -2,46 +2,31 @@
 
 public class UnitController : MonoBehaviour {
 
-	public GameObject unitObj;
+	public Simulation sim;
 	public Unit unit;
-	// private GameObject[] neighborObjs = new GameObject[6];
-	private int frame;
+	private int tick;
 
-	// Use this for initialization
 	public void Start () {
-		unitObj = (GameObject)Instantiate(Resources.Load("Unit"));
-		// for (int i = 0; i < neighborObjs.Length; i++) {
-		// 	neighborObjs[i] = (GameObject)Instantiate(Resources.Load("NeighborMarker"));
-		// }
+		sim = GridController.sim;
+		tick = 0;
 	}
 	
-	// Update is called once per frame
 	void Update () {
-		if (frame++ % 60 == 0) {
-			unit.Update();
+		if (sim.tick != tick) {
 			setState();
 			positionUnit();
-			// positionNeighbors();
 		}
+		tick = sim.tick;
 	}
 
 	void setState () {
 		if (unit.status == Unit.Status.dead) {
 			Destroy(this.gameObject);
-			Destroy(unitObj);
 		}
 	}
 
 	void positionUnit () {
 		Vector2 origin = Layout.hexToPixel(GridController.layout, unit.Position);
-		unitObj.transform.position = new Vector3(origin.x, 5, origin.y);
+		this.gameObject.transform.position = new Vector3(origin.x, 5, origin.y);
 	}
-
-	// void positionNeighbors () {
-	// 	Hex[] neighborHexes = unit.getNeighboringCells();
-	// 	for (int i = 0; i < neighborObjs.Length; i++) {
-	// 		Vector2 neighborOrigin = Layout.hexToPixel(GridController.layout, neighborHexes[i]);
-	// 		neighborObjs[i].transform.position = new Vector3(neighborOrigin.x, 5, neighborOrigin.y);
-	// 	}
-	// }
 }
