@@ -8,15 +8,17 @@ public class Unit {
     public enum Status { alive, dead };
     private Hex position;
     public Behavior[] behaviors;
+    public int team;
     public int health;
     public int damage;
     public Status status = Status.alive;
     public List<Unit> neighboringUnits = new List<Unit>();
 
-    public Unit (Simulation sim, Hex position, Behavior[] behaviors, int health = 60, int damage = 20) {
+    public Unit (Simulation sim, Hex position, Behavior[] behaviors, int team, int health = 60, int damage = 20) {
         this.sim = sim;
         this.Position = position;
         this.behaviors = behaviors;
+        this.team = team;
         this.health = health;
         this.damage = damage;
         this.sim.addUnit(this);
@@ -44,7 +46,8 @@ public class Unit {
     }
 
     private void setState () {        
-        neighboringUnits = sim.grid.getUnits(getNeighboringCells());
+        // neighboringUnits = sim.grid.getUnits(getNeighboringCells());
+        neighboringUnits =  getNeighboringEnemies();
         status = health > 0 ? Status.alive : Status.dead;
         if (status == Unit.Status.dead) {
             die();
@@ -77,6 +80,21 @@ public class Unit {
 
     public Hex[] getNeighboringCells () {
         return Hex.neighbors(this.Position);
+    }
+
+    public List<Unit> getNeighboringEnemies () {
+        Hex[] neighbors = Hex.neighbors(this.Position);
+        List<Unit> enemies = new List<Unit>();
+        for (int i = 0; i < neighbors.Length; i++) {
+            if (sim.grid.unitMap.ContainsKey(neighbors[i].getHash())) {
+                Unit u = sim.grid.getUnit(neighbors[i]);
+                if (u.team != this.team) {
+                    Debug.Log("adding enemy");
+                    enemies.Add(u);
+                }
+            }
+        }
+        return enemies;
     }
 
     public bool canMoveTo (Hex h) {

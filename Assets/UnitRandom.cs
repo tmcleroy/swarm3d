@@ -8,6 +8,6 @@ public class UnitRandom : UnitController {
 			Behavior.randomWander(),
 			Behavior.engageNeighbors
 		};
-		unit = new Unit(sim, sim.grid.getRandomCell(), behaviors);
+		unit = new Unit(sim, sim.grid.getRandomCell(), behaviors, new Random().Next(0, 2));
 	}
 }

@@ -7,13 +7,16 @@ public class Simulation {
 	public List<Unit> units;
 	public int tick;
 	private Timer timer;
-	private static int interval = 200;
+	private static int interval = 150;
 
 	public Simulation (Grid grid) {
 		this.grid = grid;
 		this.tick = 0;
 		this.units = new List<Unit>();
+		initializeTimer();
+	}
 
+	private void initializeTimer() {
 		this.timer = new Timer();
 		timer.Elapsed += new ElapsedEventHandler(onTick);
 		timer.Interval = interval;
